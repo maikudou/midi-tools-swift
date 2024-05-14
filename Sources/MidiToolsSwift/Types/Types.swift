@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct Tempo : Equatable {
+public struct Tempo : Equatable {
     var microsecondsPerQuarterNote: UInt32
     var beatsPerMinute: UInt16
 }
 
-struct SFMPTEOffset : Equatable {
+public struct SFMPTEOffset : Equatable {
     var hours: UInt8
     var minutes: UInt8
     var seconds: UInt8
@@ -20,46 +20,46 @@ struct SFMPTEOffset : Equatable {
     var fractionalFrames: UInt8
 }
 
-struct TimeSignature : Equatable {
+public struct TimeSignature : Equatable {
     var numerator: UInt8
     var denominator: UInt8
     var clocksPerClick: UInt8
     var bb: UInt8
 }
 
-struct KeySignature : Equatable {
+public struct KeySignature : Equatable {
     var flats: UInt8
     var sharps: UInt8
     var major: Bool
 }
 
-struct DivisionTimeCode: Equatable {
+public struct DivisionTimeCode: Equatable {
     var fps: Int8
     var ticksPerFrame: UInt8
 }
 
-struct DivisionMetric: Equatable {
+public struct DivisionMetric: Equatable {
     var ticksPerQuarterNote: UInt16
 }
 
-enum Division: Equatable {
+public enum Division: Equatable {
     case timeCode(DivisionTimeCode)
     case metric(DivisionMetric)
 }
 
-struct Header: Equatable {
-    var length: UInt32
-    var type: UInt16
-    var tracksCount: UInt16
-    var division: Division
+public struct Header: Equatable {
+    public var length: UInt32
+    public var type: UInt16
+    public var tracksCount: UInt16
+    public var division: Division
 }
 
-struct SequencerSpecificData : Equatable {
+public struct SequencerSpecificData : Equatable {
     var manufacturerId: String
     var data: Data?
 }
 
-enum ParseError: Error, Equatable {
+public enum ParseError: Error, Equatable {
     case outOfBounds
     case invalidHeader
     case invalidTrackPrefix

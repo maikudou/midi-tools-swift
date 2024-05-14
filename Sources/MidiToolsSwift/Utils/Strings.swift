@@ -7,7 +7,7 @@
 
 import Foundation
 
-func metaEventHumanReadableString(
+public func metaEventHumanReadableString(
   _ eventType: UInt8
 ) -> String {
   switch (eventType) {

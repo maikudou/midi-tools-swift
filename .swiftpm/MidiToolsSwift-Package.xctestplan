@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "4E294443-E847-463F-AFBD-B4BCBA607AF0",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MidiToolsSwiftUnitTests",
+        "name" : "MidiToolsSwiftUnitTests"
+      }
+    }
+  ],
+  "version" : 1
+}

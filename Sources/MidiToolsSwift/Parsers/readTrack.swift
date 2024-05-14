@@ -7,7 +7,7 @@
 
 import Foundation
 
-func readTrack(
+public func readTrack(
     number: UInt16,
     from buffer: Data,
     at position: Data.Index

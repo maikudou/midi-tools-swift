@@ -7,7 +7,7 @@
 
 import Foundation
 
-func readHeader(from buffer: Data) throws -> (bytesRead: UInt32, header: Header) {
+public func readHeader(from buffer: Data) throws -> (bytesRead: UInt32, header: Header) {
     // MThd
     let FILE_HEADER = Data([0x4d, 0x54, 0x68, 0x64])
     
