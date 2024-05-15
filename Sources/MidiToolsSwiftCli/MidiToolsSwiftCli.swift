@@ -78,7 +78,6 @@ extension MidiTools {
                                 .map {String(format: "%02hhx", $0)}.joined()
                             
                             sysexVendors.insert(manufacturerId)
-                            // TODO: implement manufacturers mapping
                         }
                     }
                     
@@ -90,10 +89,11 @@ extension MidiTools {
                 if (copyrightNotices.count > 0) {
                     print("\nCopyright notice: \(copyrightNotices.joined(separator: ", "))")
                 }
+                sysexVendors = sysexVendors.filter { MIDI_MANUFACTURERS[$0] != nil }
                 if (sysexVendors.count > 0) {
                     print("\nFile has vendor specific data, vendors: ")
                     for sysexVendor in sysexVendors {
-                        print(sysexVendor)
+                        print(MIDI_MANUFACTURERS[sysexVendor]!)
                     }
                 }
                 if (texts) {
