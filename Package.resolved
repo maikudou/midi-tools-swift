@@ -1,6 +1,15 @@
 {
-  "originHash" : "0c39a3b14f77b1590ee929894d038b14e0bcb43ca516d5633ba89d7b9dc9bf01",
+  "originHash" : "da4ac02054ac10fcc31e9e4e03650e39db49991a975920b02b97a694bc1c6a5f",
   "pins" : [
+    {
+      "identity" : "midi-manufacturers-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maikudou/midi-manufacturers-swift",
+      "state" : {
+        "revision" : "afca8be2c586fb8b2845de558e3be82360659098",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "swift-argument-parser",
       "kind" : "remoteSourceControl",

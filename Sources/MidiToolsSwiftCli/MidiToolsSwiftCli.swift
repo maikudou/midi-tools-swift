@@ -1,6 +1,7 @@
 import ArgumentParser
 import Foundation
 import MidiToolsSwift
+import MidiManufacturers
 
 @main
 struct MidiTools: ParsableCommand {

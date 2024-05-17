@@ -7,6 +7,7 @@ let package = Package(
     name: "MidiToolsSwift",
     dependencies: [
       .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+      .package(url: "https://github.com/maikudou/midi-manufacturers-swift", from: "1.0.0")
     ],
     targets: [
         .target(name: "MidiToolsSwift", dependencies: []),
@@ -14,7 +15,8 @@ let package = Package(
             name: "midi-tools",
             dependencies: [
                 "MidiToolsSwift",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "MidiManufacturers", package: "midi-manufacturers-swift")
             ],
             path: "Sources/MidiToolsSwiftCli"
         ),
