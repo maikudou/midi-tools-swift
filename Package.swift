@@ -14,7 +14,7 @@ let package = Package(
             name: "midi-tools",
             dependencies: [
                 "MidiToolsSwift",
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             path: "Sources/MidiToolsSwiftCli"
         ),

@@ -6,7 +6,7 @@ import MidiToolsSwift
 struct MidiTools: ParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "MidiTools",
-        subcommands: [Info.self])
+        subcommands: [Info.self, Convert.self])
 }
 
 extension MidiTools {
@@ -28,8 +28,7 @@ extension MidiTools {
             
             let (bytesRead, header) = try readHeader(from: buffer)
             
-            print("\nStandart MIDI file, type \(header.type)")
-            print("Number of tracks: \(header.tracksCount)")
+            print("\nStandart MIDI file Type \(header.type)\n")
             
             var position = bytesRead
             
@@ -102,6 +101,34 @@ extension MidiTools {
                         print("\(metaEventHumanReadableString(textEvent.type)): \(textEvent.text)")
                     }
                 }
+            }
+        }
+    }
+    
+    struct Convert: ParsableCommand {
+        @Argument(help: "Specify the input file.")
+        public var inputFile: String
+        
+        @Argument(help: "Specify the output file.")
+        public var outputFile: String?
+        
+        @Option(name: .shortAndLong, help: "Output format, 0 | 1 | 2")
+        var type: Int
+        
+        public func run() throws {
+            let fileUrl = URL(fileURLWithPath: self.inputFile)
+            let buffer = try Data(contentsOf: fileUrl)
+            
+            if (type > 2 || type < 0) {
+                throw ConvertError.unexpectedType
+            }
+            
+            print("Converting \(fileUrl.absoluteString)...")
+            
+            let (_, header) = try readHeader(from: buffer)
+            
+            if (header.type == type) {
+                throw ConvertError.alreadyCorrectType
             }
         }
     }

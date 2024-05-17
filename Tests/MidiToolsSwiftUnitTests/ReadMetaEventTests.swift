@@ -23,7 +23,7 @@ final class ReadMetaEventTests: XCTestCase {
     
     func testShortTextMetaEvents() throws {
         let text = "Some short text"
-        for status in [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07] as [UInt8] {
+        for status in [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09] as [UInt8] {
             var buffer = Data([status, UInt8(text.count)])
             buffer.append(text.data(using: .isoLatin1)!)
             
@@ -37,7 +37,7 @@ final class ReadMetaEventTests: XCTestCase {
     
     func testLongTextMetaEvents() throws {
         let text = "Any amount of text describing anything. It is a good idea to put a text event right at the beginning of a track, with the name of the track, a description of its intended orchestration, and any other information which the user wants to put there. Text events may also occur at other times in a track, to be used as lyrics, or descriptions of cue points. The text in this event should be printable ASCII characters for maximum interchange. However, other character codes using the high-order bit may be used for interchange of files between different programs on the same computer which supports an extended character set. Programs on a computer which does not support non-ASCII characters should ignore those characters."
-        for status in [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07] as [UInt8] {
+        for status in [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09] as [UInt8] {
             var buffer = Data([status])
             buffer.append(encodeVariableQuantity(quantity: UInt32(text.count)))
             buffer.append(text.data(using: .isoLatin1)!)
@@ -55,6 +55,13 @@ final class ReadMetaEventTests: XCTestCase {
         
         XCTAssertEqual(bytesRead, 3)
         XCTAssertEqual(event as! ChannelPrefixMetaEvent, ChannelPrefixMetaEvent(channelPrefix: 16))
+    }
+    
+    func testPortPrefixEvent() throws {
+        let (bytesRead, event) = try readMetaEvent(from: Data([0x21, 0x01, 16]), at: 0)
+        
+        XCTAssertEqual(bytesRead, 3)
+        XCTAssertEqual(event as! PortPrefixMetaEvent, PortPrefixMetaEvent(portPrefix: 16))
     }
     
     func testEndOfTrackMetaEvent() throws {
@@ -197,12 +204,12 @@ final class ReadMetaEventTests: XCTestCase {
     }
     
     func testUnknownMetaEvent() throws {
-        let (bytesRead, event) = try readMetaEvent(from: Data([0x21, 0x01, 0x00]), at: 0)
+        let (bytesRead, event) = try readMetaEvent(from: Data([0x22, 0x01, 0x00]), at: 0)
         
         XCTAssertEqual(bytesRead, 3)
         XCTAssertEqual(
             event as! UnknownMetaEvent,
-            UnknownMetaEvent(type: 0x21, data: Data([0x00]))
+            UnknownMetaEvent(type: 0x22, data: Data([0x00]))
         )
     }
 }

@@ -50,6 +50,21 @@ func readMetaEvent(
     }
     
     /**
+     * Port prefix meta event always has lenght of 1 byte
+     */
+    func readPortPrefix(
+        at position: Data.Index
+    ) throws -> (bytesRead: UInt32, portPrefix: UInt8) {
+        let length = try buffer.readUInt8(position)
+        try checkLength(actual: Int(length), expected: 1)
+        let port = try buffer.readUInt8(position + 1)
+        
+        return (2,
+                port
+        )
+    }
+    
+    /**
      * End of track meta-event always has 0 as its only data byte
      */
     func readEndOfTrack(
@@ -162,7 +177,7 @@ func readMetaEvent(
             bytesRead: bytesRead,
             SequenceNumberMetaEvent(sequenceNumber: result.sequenceNumber)
         )
-    case 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07:
+    case 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09:
         let result = try buffer.readVariableLengthData(position + Int(bytesRead))
         let textData = String(data: result.data, encoding: String.Encoding.isoLatin1)!
         bytesRead += result.bytesRead
@@ -180,8 +195,12 @@ func readMetaEvent(
             return (bytesRead, LyricMetaEvent(text: textData))
         case 0x06:
             return (bytesRead, MarkerMetaEvent(text: textData))
-        default:
+        case 0x07:
             return (bytesRead, CuePointMetaEvent(text: textData))
+        case 0x08:
+            return (bytesRead, ProgramNameMetaEvent(text: textData))
+        default:
+            return (bytesRead, DeviceNameMetaEvent(text: textData))
         }
     case 0x20:
         let result = try readChannelPrefix(at: position + Int(bytesRead))
@@ -190,6 +209,15 @@ func readMetaEvent(
         return (bytesRead,
                 ChannelPrefixMetaEvent(channelPrefix: result.channelPrefix)
         )
+    
+    case 0x21:
+        let result = try readPortPrefix(at: position + Int(bytesRead))
+        bytesRead += result.bytesRead
+        
+        return (bytesRead,
+                PortPrefixMetaEvent(portPrefix: result.portPrefix)
+        )
+        
     case 0x2f:
         let result = try readEndOfTrack(at: position + Int(bytesRead))
         bytesRead += result.bytesRead

@@ -81,6 +81,18 @@ public struct CuePointMetaEvent : TextEvent {
     public var text: String
 }
 
+public struct ProgramNameMetaEvent : TextEvent {
+    public var type: UInt8 {return 0x08}
+    public var text: String
+}
+
+public struct DeviceNameMetaEvent : TextEvent {
+    public var type: UInt8 {return 0x09}
+    public var text: String
+}
+
+
+
 /**
  * From MIDI spec:
  * The MIDI channel (0-15) contained in this event may be used to associate
@@ -91,6 +103,11 @@ public struct CuePointMetaEvent : TextEvent {
 public struct ChannelPrefixMetaEvent : MetaEvent {
     public var type: UInt8 {return 0x20}
     public var channelPrefix: UInt8
+}
+
+public struct PortPrefixMetaEvent : MetaEvent {
+    public var type: UInt8 {return 0x21}
+    public var portPrefix: UInt8
 }
 
 public struct EndOfTrackMetaEvent : MetaEvent {

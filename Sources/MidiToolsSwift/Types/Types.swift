@@ -68,3 +68,8 @@ public enum ParseError: Error, Equatable {
     case unexpectedValue(expected: Int, actual: Int)
     case unexpectedStatus(actual: UInt8)
 }
+
+public enum ConvertError: Error {
+    case unexpectedType
+    case alreadyCorrectType
+}
