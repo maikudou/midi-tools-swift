@@ -38,7 +38,6 @@ final class ReadHeaderTests: XCTestCase {
         )
         XCTAssertEqual(bytesRead, 14)
         XCTAssertEqual(header, Header(
-            length: 6,
             type: 0,
             tracksCount: 1,
             division: Division.metric(DivisionMetric(ticksPerQuarterNote: 480)))
@@ -58,7 +57,6 @@ final class ReadHeaderTests: XCTestCase {
         )
         XCTAssertEqual(bytesRead, 14)
         XCTAssertEqual(header, Header(
-            length: 6,
             type: 1,
             tracksCount: 3,
             division: Division.metric(DivisionMetric(ticksPerQuarterNote: 480)))
@@ -78,7 +76,6 @@ final class ReadHeaderTests: XCTestCase {
         )
         XCTAssertEqual(bytesRead, 14)
         XCTAssertEqual(header, Header(
-            length: 6,
             type: 2,
             tracksCount: 1,
             division: Division.metric(DivisionMetric(ticksPerQuarterNote: 480)))
@@ -98,7 +95,6 @@ final class ReadHeaderTests: XCTestCase {
         )
         XCTAssertEqual(bytesRead, 14)
         XCTAssertEqual(header, Header(
-            length: 6,
             type: 0,
             tracksCount: 1,
             division: Division.timeCode(DivisionTimeCode(fps: 24, ticksPerFrame: 80)))
@@ -163,10 +159,10 @@ final class ReadHeaderTests: XCTestCase {
         )
         XCTAssertEqual(bytesRead, 16)
         XCTAssertEqual(header, Header(
-            length: 8,
             type: 0,
             tracksCount: 1,
-            division: Division.metric(DivisionMetric(ticksPerQuarterNote: 480)))
+            division: Division.metric(DivisionMetric(ticksPerQuarterNote: 480)),
+            extraData: Data([0xff, 0x80]))
         )
     }
 }

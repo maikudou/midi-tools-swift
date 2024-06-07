@@ -61,6 +61,11 @@ public func readHeader(from buffer: Data) throws -> (bytesRead: UInt32, header: 
     let division = try readDivision(at: Data.Index(bytesRead))
     bytesRead += 2
     
+    var extraData: Data? = nil
+    if (headerLength > 6) {
+        extraData = buffer[bytesRead..<(bytesRead + headerLength - 6)]
+    }
+            
     // Skip any header fields we don't know about
     bytesRead += headerLength - 6
     
@@ -70,10 +75,10 @@ public func readHeader(from buffer: Data) throws -> (bytesRead: UInt32, header: 
     
     return (bytesRead,
         Header(
-            length: headerLength,
             type: fileType,
             tracksCount: tracksCount,
-            division: division
+            division: division,
+            extraData: extraData
         )
     )
 }

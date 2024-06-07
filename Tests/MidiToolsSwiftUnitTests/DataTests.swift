@@ -25,6 +25,24 @@ final class DataTests: XCTestCase {
         }
     }
     
+    func testWriteUInt32BE() throws {
+        do {
+            var data = Data()
+            data.appendUInt32BE(1)
+            XCTAssertEqual(data, Data([0x00,0x00,0x00,0x1]))
+        }
+        do {
+            var data = Data()
+            data.appendUInt32BE(0xFFCCFFCC)
+            XCTAssertEqual(data, Data([0xFF,0xCC,0xFF,0xCC]))
+        }
+        do {
+            var data = Data()
+            data.appendUInt32BE(0xFFCC0064)
+            XCTAssertEqual(data, Data([0xFF,0xCC,0x00,0x64]))
+        }
+    }
+    
     func testReadUInt16BE() throws {
         XCTAssertEqual(try Data([0x00,0x1]).readUInt16BE(0), UInt16(1))
         XCTAssertEqual(try Data([0xFF,0xCC]).readUInt16BE(0), UInt16(0xFFCC))
@@ -37,6 +55,24 @@ final class DataTests: XCTestCase {
         }
         XCTAssertThrowsError(try Data([0x00,0x01]).readUInt16BE(2)) { error in
             XCTAssertEqual(error as! ParseError, ParseError.outOfBounds)
+        }
+    }
+    
+    func testWriteUInt16BE() throws {
+        do {
+            var data = Data()
+            data.appendUInt16BE(1)
+            XCTAssertEqual(data, Data([0x00,0x1]))
+        }
+        do {
+            var data = Data()
+            data.appendUInt16BE(0xFFCC)
+            XCTAssertEqual(data, Data([0xFF,0xCC]))
+        }
+        do {
+            var data = Data()
+            data.appendUInt16BE(0x64BA)
+            XCTAssertEqual(data, Data([0x64,0xBA]))
         }
     }
     
@@ -79,6 +115,29 @@ final class DataTests: XCTestCase {
         }
         XCTAssertThrowsError(try Data([0x10]).read7bitWordLE(10)) { error in
             XCTAssertEqual(error as! ParseError, ParseError.outOfBounds)
+        }
+    }
+    
+    func testAppend7bitWordLE() throws {
+        do {
+            var data = Data()
+            data.append7bitWordLE(0x80)
+            XCTAssertEqual(data, Data([0x00, 0x01]))
+        }
+        do {
+            var data = Data()
+            data.append7bitWordLE(0x3fff)
+            XCTAssertEqual(data, Data([0x7f, 0x7f]))
+        }
+        do {
+            var data = Data()
+            data.append7bitWordLE(0x3fff)
+            XCTAssertEqual(data, Data([0x7f, 0x7f]))
+        }
+        do {
+            var data = Data()
+            data.append7bitWordLE(0x2000)
+            XCTAssertEqual(data, Data([0x00, 0x40]))
         }
     }
     

@@ -48,15 +48,74 @@ public enum Division: Equatable {
 }
 
 public struct Header: Equatable {
-    public var length: UInt32
     public var type: UInt16
     public var tracksCount: UInt16
     public var division: Division
+    public var extraData: Data?
+    
+    public var rawData: Data {
+        get {
+            var data = "MThd".data(using: .isoLatin1)!
+            data.appendUInt32BE(UInt32(6 + (self.extraData != nil ? self.extraData!.count : 0)))
+            data.appendUInt16BE(self.type)
+            data.appendUInt16BE(self.tracksCount)
+            
+            switch self.division {
+            case .timeCode(let divisionTimeCode):
+                data.append(
+                    Data([
+                        UInt8(truncatingIfNeeded: ~divisionTimeCode.fps + 1),
+                        divisionTimeCode.ticksPerFrame
+                    ])
+                )
+            case .metric(let divisionMetric):
+                data.appendUInt16BE(divisionMetric.ticksPerQuarterNote)
+            }
+            
+            if self.extraData != nil {
+                data.append(self.extraData!)
+            }
+            return data
+        }
+    }
+    
+    public init(type: UInt16, tracksCount: UInt16, division: Division, extraData: Data?) {
+        self.type = type
+        self.tracksCount = tracksCount
+        self.division = division
+        self.extraData = extraData
+    }
+    
+    public init(type: UInt16, tracksCount: UInt16, division: Division) {
+        self.type = type
+        self.tracksCount = tracksCount
+        self.division = division
+    }
 }
 
 public struct SequencerSpecificData : Equatable {
     var manufacturerId: String
     var data: Data?
+}
+
+public struct Track {
+    public var number: UInt16
+    public var events: [TrackEvent]
+    public var rawData: Data {
+        get {
+            return encodeTrack(from: events, with: number)
+        }
+    }
+    
+    public init(number: UInt16, events: [TrackEvent]) {
+        self.number = number
+        self.events = events
+    }
+}
+
+public struct MIDIFile {
+    var type: UInt8
+    var tracks: [Track]
 }
 
 public enum ParseError: Error, Equatable {
@@ -73,3 +132,4 @@ public enum ConvertError: Error {
     case unexpectedType
     case alreadyCorrectType
 }
+

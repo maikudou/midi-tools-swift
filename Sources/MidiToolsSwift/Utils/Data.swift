@@ -19,6 +19,31 @@ extension Data {
         return result
     }
     
+    mutating func appendUInt32BE(_ value: UInt32) -> Void {
+        var localValue = value
+        var data: [UInt8] = []
+        data.append(UInt8(localValue & 0xFF))
+        localValue >>= 8
+        data.append(UInt8(localValue & 0xFF))
+        localValue >>= 8
+        data.append(UInt8(localValue & 0xFF))
+        localValue >>= 8
+        data.append(UInt8(localValue & 0xFF))
+        return self.append(contentsOf: data.reversed())
+    }
+    
+    
+    mutating func appendUInt24BE(_ value: UInt32) -> Void {
+        var localValue = value
+        var data: [UInt8] = []
+        data.append(UInt8(localValue & 0xFF))
+        localValue >>= 8
+        data.append(UInt8(localValue & 0xFF))
+        localValue >>= 8
+        data.append(UInt8(localValue & 0xFF))
+        return self.append(contentsOf: data.reversed())
+    }
+    
     func readUInt16BE(_ position: Data.Index) throws -> UInt16 {
         if (self.count < position + 2) {
             throw ParseError.outOfBounds
@@ -26,6 +51,15 @@ extension Data {
         var result: UInt16 = UInt16(self[position]) << (1*8)
         result = result | UInt16(self[position+1])
         return result
+    }
+    
+    mutating func appendUInt16BE(_ value: UInt16) -> Void {
+        var localValue = value
+        var data: [UInt8] = []
+        data.append(UInt8(localValue & 0xFF))
+        localValue >>= 8
+        data.append(UInt8(localValue & 0xFF))
+        return self.append(contentsOf: data.reversed())
     }
     
     func readUInt8(_ position: Data.Index) throws -> UInt8 {
@@ -46,6 +80,13 @@ extension Data {
         let lsb = try self.readUInt8(position)
         let msb = try self.readUInt8(position + 1)
         return UInt16((UInt16(msb) & 0x7f) << 7) + UInt16(lsb & 0x7f)
+    }
+    
+    mutating func append7bitWordLE(_ value: UInt16) -> Void {
+        let lsb = UInt8((value >> 7) & 0x7f)
+        let msb = UInt8(value & 0x7f)
+        
+        return self.append(contentsOf: [msb, lsb])
     }
     
     func readVariableQuantity(

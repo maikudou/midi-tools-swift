@@ -111,13 +111,15 @@ extension MidiTools {
         public var inputFile: String
         
         @Argument(help: "Specify the output file.")
-        public var outputFile: String?
+        public var outputFile: String
         
         @Option(name: .shortAndLong, help: "Output format, 0 | 1 | 2")
         var type: Int
         
         public func run() throws {
             let fileUrl = URL(fileURLWithPath: self.inputFile)
+            let outputUrl = URL(fileURLWithPath: self.outputFile)
+            print(fileUrl)
             let buffer = try Data(contentsOf: fileUrl)
             
             if (type > 2 || type < 0) {
@@ -126,10 +128,44 @@ extension MidiTools {
             
             print("Converting \(fileUrl.absoluteString)...")
             
-            let (_, header) = try readHeader(from: buffer)
+            let (bytesRead, header) = try readHeader(from: buffer)
             
             if (header.type == type) {
                 throw ConvertError.alreadyCorrectType
+            }
+            
+            // Convert from single track to multitrack
+            if (header.type == 0 && type == 1) {
+                var tracks: [Track] = []
+                
+                let (_, sourceTrack) = try readTrack(
+                    number: 0,
+                    from: buffer,
+                    at: Int(bytesRead)
+                )
+                
+                let events = splitEventsByChannel(sourceTrack.events)
+                
+                for channel in events.keys.sorted() {
+                    if ((events[channel]?.count ?? 0) > 0) {
+                        tracks.append(Track(number: UInt16(channel), events: events[channel]!))
+                    }
+                }
+                
+                let newHeader = Header(
+                    type: UInt16(type),
+                    tracksCount: UInt16(tracks.count),
+                    division: header.division
+                )
+                
+                var outputData = Data()
+                outputData.append(newHeader.rawData)
+                for track in tracks {
+                    outputData.append(track.rawData)
+                }
+                
+                print("Saving to \(outputUrl.absoluteString)...")
+                try outputData.write(to: outputUrl)
             }
         }
     }

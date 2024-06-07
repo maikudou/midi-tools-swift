@@ -42,7 +42,6 @@ final class ReadChannelEventTests: XCTestCase {
                 event as! NoteOnEvent,
                 NoteOnEvent(channel: 5, note: 64, velocity: 255))
             XCTAssertEqual(bytesRead, 2)
-
         }
     }
     
