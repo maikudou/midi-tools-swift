@@ -2,7 +2,7 @@
 //  ReadMetaEventTests.swift
 //
 //
-//  Created by Mikhail Labanov on 5/7/24.
+//  Created by Mike Henkel on 5/7/24.
 //
 
 import XCTest

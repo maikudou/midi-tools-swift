@@ -2,7 +2,7 @@
 //  SysExEventParserTests.swift
 //  
 //
-//  Created by Mikhail Labanov on 5/6/24.
+//  Created by Mike Henkel on 5/6/24.
 //
 
 import XCTest

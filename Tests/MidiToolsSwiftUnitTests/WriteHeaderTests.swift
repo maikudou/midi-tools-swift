@@ -2,7 +2,7 @@
 //  WriteHeaderTests.swift
 //
 //
-//  Created by Mikhail Labanov on 6/5/24.
+//  Created by Mike Henkel on 6/5/24.
 //
 
 import XCTest

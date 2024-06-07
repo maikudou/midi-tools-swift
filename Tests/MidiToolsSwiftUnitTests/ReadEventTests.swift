@@ -2,7 +2,7 @@
 //  ReadEventTests.swift
 //  
 //
-//  Created by Mikhail Labanov on 5/10/24.
+//  Created by Mike Henkel on 5/10/24.
 //
 
 import XCTest

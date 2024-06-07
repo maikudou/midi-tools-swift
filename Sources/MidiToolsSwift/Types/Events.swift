@@ -2,7 +2,7 @@
 //  Events.swift
 //
 //
-//  Created by Mikhail Labanov on 5/2/24.
+//  Created by Mike Henkel on 5/2/24.
 //
 
 import Foundation
