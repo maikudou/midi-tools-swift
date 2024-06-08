@@ -131,5 +131,6 @@ public enum ParseError: Error, Equatable {
 public enum ConvertError: Error {
     case unexpectedType
     case alreadyCorrectType
+    case notImplemented
 }
 

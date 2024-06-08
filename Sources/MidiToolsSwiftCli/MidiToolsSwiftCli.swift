@@ -126,13 +126,15 @@ extension MidiTools {
                 throw ConvertError.unexpectedType
             }
             
-            print("Converting \(fileUrl.absoluteString)...")
+            print("Reading \(fileUrl.absoluteString)...")
             
             let (bytesRead, header) = try readHeader(from: buffer)
             
             if (header.type == type) {
                 throw ConvertError.alreadyCorrectType
             }
+            
+            print("Converting...")
             
             // Convert from single track to multitrack
             if (header.type == 0 && type == 1) {
@@ -166,6 +168,34 @@ extension MidiTools {
                 
                 print("Saving to \(outputUrl.absoluteString)...")
                 try outputData.write(to: outputUrl)
+            } else if (header.type == 1 && type == 0) {
+                var position = bytesRead
+                var tracks: [Track] = []
+                
+                for trackNumber in 0..<header.tracksCount {
+                    let (bytesRead, track) = try readTrack(
+                        number: trackNumber,
+                        from: buffer,
+                        at: Int(position)
+                    )
+                    tracks.append(track)
+                    position += bytesRead
+                }
+                
+                let newHeader = Header(
+                    type: UInt16(type),
+                    tracksCount: UInt16(1),
+                    division: header.division
+                )
+                
+                var outputData = Data()
+                outputData.append(newHeader.rawData)
+                outputData.append(joinTracks(tracks).rawData)
+                
+                print("Saving to \(outputUrl.absoluteString)...")
+                try outputData.write(to: outputUrl)
+            } else {
+                throw ConvertError.notImplemented
             }
         }
     }

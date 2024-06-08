@@ -36,7 +36,7 @@ final class UtilsWriteTests: XCTestCase {
         XCTAssertEqual(encodeVariableQuantity(quantity: 0x08000000), Data([0xc0, 0x80, 0x80, 0x00]))
         XCTAssertEqual(encodeVariableQuantity(quantity: 0x0fffffff), Data([0xff, 0xff, 0xff, 0x7f]))
     }
-
+    
     func testEncodeTextMetaEvent() throws {
         do {
             let text = "Some text in a meta event"
@@ -152,6 +152,30 @@ final class UtilsWriteTests: XCTestCase {
             XCTAssert(splitEvents[1]![0].deltaTime == 0)
             XCTAssert(splitEvents[1]![1].deltaTime == 200)
             XCTAssert(splitEvents[1]![2].deltaTime == 500)
+        }
+    }
+    
+    func testJoinTracks() throws {
+        do {
+            let track = joinTracks([
+                Track(number: 0, events: [
+                    (0, NoteOnEvent(channel: 0, note: 100, velocity: 127)),
+                    (100, NoteOnEvent(channel: 0, note: 127, velocity: 127)),
+                    (300, NoteOnEvent(channel: 0, note: 129, velocity: 127)),
+                ]),
+                Track(number: 1, events: [
+                    (0, NoteOnEvent(channel: 1, note: 150, velocity: 127)),
+                    (200, NoteOnEvent(channel: 1, note: 128, velocity: 127)),
+                    (500, NoteOnEvent(channel: 1, note: 130, velocity: 127))
+                ])
+            ])
+            XCTAssert(track.number == 0)
+            XCTAssert(track.events[0].deltaTime == 0)
+            XCTAssert(track.events[1].deltaTime == 0)
+            XCTAssert(track.events[2].deltaTime == 100)
+            XCTAssert(track.events[3].deltaTime == 100)
+            XCTAssert(track.events[4].deltaTime == 200)
+            XCTAssert(track.events[5].deltaTime == 300)
         }
     }
 }

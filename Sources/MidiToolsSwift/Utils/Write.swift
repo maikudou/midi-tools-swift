@@ -153,3 +153,26 @@ public func splitEventsByChannel(
     
     return events
 }
+
+public func joinTracks(_ tracks: [Track]) -> Track {
+    var events: [TrackEvent] = []
+    let heap = Heap<(time: Int, event: any Event)>(compareBy: {
+        $0.event is any MetaEvent || $0.time < $1.time
+    })
+
+    for track in tracks {
+        var time = 0
+        for (deltaTime, event) in track.events {
+            time += Int(deltaTime)
+            heap.insert((time, event))
+        }
+    }
+    
+    var currentTime = 0
+    while let (time, event) = heap.pop() {
+        events.append((UInt32(time-currentTime), event))
+        currentTime = time
+    }
+    
+    return Track(number: 0, events: events)
+}
