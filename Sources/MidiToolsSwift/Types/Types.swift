@@ -114,8 +114,22 @@ public struct Track {
 }
 
 public struct MIDIFile {
-    var type: UInt8
+    var header: Header
     var tracks: [Track]
+    var metadata: Metadata?
+}
+
+public struct Metadata {
+    var name: String?
+    var artist: String?
+    var album: String?
+    var year: String?
+    var compilation: Bool?
+    var genre: String?
+    var trackIndex: Int?  // Number of the track in an album/compilation
+    var trackNumber: Int? // Total number of tracks in an album/compilation
+    var composer: String?
+    var comment: String?
 }
 
 public enum ParseError: Error, Equatable {
