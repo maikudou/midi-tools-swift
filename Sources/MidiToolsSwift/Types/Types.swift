@@ -114,9 +114,9 @@ public struct Track {
 }
 
 public struct MIDIFile {
-    var header: Header
-    var tracks: [Track]
-    var metadata: Metadata?
+    public var header: Header
+    public var tracks: [Track]
+    public var metadata: Metadata?
 }
 
 public struct Metadata {
